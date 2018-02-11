@@ -1,82 +1,82 @@
 # 目录
 [Rust异步编程: 你需要知道的事](async-in-rust/_chapter.md)
 
-- 暂时没有东西的教程
-    - Hello, world!
-    - 文件服务
-    - 添加缓存
-    - 添加流(Add Streaming)
-- 任务模型
-    - 背景: 同步 vs. 异步
-    - 通过任务掌握异步编程
-    - 玩具一: 任务执行器
-    - 玩具二: 事件循环
-    - 整合玩具
-    - 实用任务系统
-        - 任务
-        - 执行器
-        - 时间循环
-- Tokio: 异步网络I/O
-    - 获取套接字(sockets)
-    - 读写
-    - 在字节层级转换
-    - 关闭连接
-- Futures
-    - 核心概念
-    - 示例: `ReadExact`
-    - 示例: 超时包装器
-    - 推送及拉取: future与任务
-    - 整合器
-    - 任务取消
-    - 关联同步与异步代码
-    - 示例: RPC客户端
-- 流(Streams)
-    - 核心概念
-    - 整合器
-    - 示例: 分行流
-- Sinks
-    - 核心概念
-    - 整合器
-    - 示例: 写入缓存
-- 案例学习: 聊天服务器
-- 转换(Transports)
-    - 分帧(Framing)
-    - 解码
-    - 编码
-    - 示例: http服务器
-    - 定长分帧
-    - 转换层
-- 异步编程练习
-    - 用`futures`高效编程
-        - 多线程化
-        - 使用整合器的时机
-        - 示例: Github API客户端
-        - 缓存与`bytes`
-    - 组织代码
-        - 写库指南
-        - 资源管理
-        - 任务结构化
-        - 安全退出
-        - 背压(Backpressure)
-- 功能齐备的async
-    - 网络
-        - HTTP
-        - DNS
-        - TLS
-        - Webscokets
-        - Gzip
-        - UDP
-    - 服务
-        - 数据库
-        - 定时器
-        - 文件I/O
-        - 进程
-        - 命名管流
-        - 信号量
-        - inotify
-- 高级话题
-    - 管理Tokio时间循环
-    - 构建定制执行器
-- FAQ
-    - 与其他语言的对比
-    - "拉取"模型的合理性
+- [暂时没有东西的教程](crash-course/_chapter.md)
+    - [Hello, world!](crash-course/hello.md)
+    - [文件服务](crash-course/files.md)
+    - [添加缓存](crash-course/caching.md)
+    - [添加流(Add Streaming)](crash-course/streaming.md)
+- [任务模型](task-model/_chapter.md)
+    - [背景: 同步 vs. 异步](task-model/intro.md)
+    - [通过任务掌握异步编程](task-model/tasks.md)
+    - [玩具一: 任务执行器](task-model/exec.md)
+    - [玩具二: 事件循环](task-model/events.md)
+    - [整合玩具](task-model/finish.md)
+    - [实用任务系统](task-model/real/_section.md)
+        - [任务](task-model/real/tasks.md)
+        - [执行器](task-model/real/exec.md)
+        - [时间循环](task-model/real/events.md)
+- [Tokio: 异步网络I/O](tokio/_chapter.md)
+    - [获取套接字(sockets)](tokio/socket.md)
+    - [读写](tokio/io.md)
+    - [在字节层级转换](tokio/transform.md)
+    - [关闭连接](tokio/shutdown.md)
+- [Futures](futures/_chapter.md)
+    - [核心概念](futures/def.md)
+    - [示例: `ReadExact`](futures/read-exact.md)
+    - [示例: 超时包装器](futures/timeout.md)
+    - [推送及拉取: future与任务](futures/pull.md)
+    - [整合器](futures/combinators.md)
+    - [任务取消](futures/cancellation.md)
+    - [关联同步与异步代码](futures/sync.md)
+    - [示例: RPC客户端](rpc-client/_chapter.md)
+- [流(Streams)](streams/_chapter.md)
+    - [核心概念](streams/def.md)
+    - [整合器](streams/combinators.md)
+    - [示例: 分行流](streams/lines.md)
+- [Sinks](sinks/_chapter.md)
+    - [核心概念](sinks/def.md)
+    - [整合器](sinks/combinators.md)
+    - [示例: 写入缓存](sinks/buffering.md)
+- [案例学习: 聊天服务器](simple-chat/_chapter.md)
+- [转换(Transports)](transports/_chapter.md)
+    - [分帧(Framing)](transports/framing.md)
+    - [解码](transports/decoding.md)
+    - [编码](transports/encoding.md)
+    - [示例: http服务器](simple-http/_chapter.md)
+    - [定长分帧](transports/length.md)
+    - [转换层](transports/layers.md)
+- [异步编程](async-in-practice/_chapter.md)
+    - [用`futures`高效编程](async-in-practice/effective.md)
+        - [多线程化](async-in-practice/concurrency.md)
+        - [使用整合器的时机](async-in-practice/cominators.md)
+        - [示例: Github API客户端](api-client/_chapter.md)
+        - [缓存与`bytes`](async-in-practice/buffering.md)
+    - [组织代码](async-in-practice/orgnizing.md)
+        - [写库指南](async-in-practice/libs.md)
+        - [资源管理](async-in-practice/resources.md)
+        - [任务结构化](async-in-practice/tasks.md)
+        - [安全退出](async-in-practice/shutdown.md)
+        - [背压(Backpressure)](async-in-practice/backpressure.md)
+- [功能齐备的async](batterise/_chapter.md)
+    - [网络](batterise/networking/_chapter.md)
+        - [HTTP](batterise/networking/http.md)
+        - [DNS](batterise/networking/dns.md)
+        - [TLS](batterise/networking/tls.md)
+        - [Webscokets](batterise/networking/websockets.md)
+        - [Gzip](batterise/networking/gzip.md)
+        - [UDP](batterise/networking/udp.md)
+    - [服务](batterise/services/_chapter.md)
+        - [数据库](batterise/services/databases.md)
+        - [定时器](batterise/services/timers.md)
+        - [文件I/O](batterise/services/files.md)
+        - [进程](batterise/services/processes.md)
+        - [命名管流](batterise/services/named-pipes.md)
+        - [信号量](batterise/services/signals.md)
+        - [inotify](batterise/services/inotify.md)
+- [高级话题](advanced/_chapter.md)
+    - [管理Tokio时间循环](advanced/tokio.md)
+    - [构建定制执行器](advanced/exec.md)
+- [FAQ](faq/_chapter.md)
+    - [与其他语言的对比](faq/langs.md)
+    - ["拉取"模型的合理性](faq/pull.md)
