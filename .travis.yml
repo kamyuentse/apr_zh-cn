@@ -7,9 +7,8 @@ rust:
 branches:
   only:
     - master
-    - travis-ci
 before_script:
-  - cargo install mdbook
+  - (cargo install mdbook || true)
 script:
   - mdbook build
 
