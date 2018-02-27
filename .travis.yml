@@ -17,7 +17,7 @@ deploy:
   local-dir: book
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
-  keep-history: ture
+  keep-history: false
   on:
     branch: master
 
