@@ -1,9 +1,6 @@
-# The task model
+# 任务模型(Task Model)
+为了用Rust高效地写异步代码, 你需要了解它的基础: 任务模型. 幸运的是, 该模块仅由
+几个简单的模块组成.
 
-To effectively write async code in Rust, you need to have a good grasp on its
-foundation: the task model. Fortunately, that model is made up of only a few
-simple pieces.
-
-This chapter walks through a high level introduction of the task
-concept, then illustrates how the system fits together by building a working
-task executor and an event loop, and plugging them together.
+本章将介绍任务概念的高级内容, 然后阐释怎样通过构建工作任务执行器和事件循环, 以及
+整合它们来让系统运行起来.

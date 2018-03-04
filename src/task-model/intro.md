@@ -1,62 +1,53 @@
-# Background: sync vs. async
+# 背景: 同步 vs. 异步
 
-It's often easiest to understand asynchronous programming *by contrast* with
-synchronous programming. So let's start with a simple sync example:
+通过对比同步编程来理解异步编程是最容易的方法, 所以我们先来看一个简单的同步示例:
 
 ```rust
 // reads 4096 bytes into `my_vec`
 socket.read_exact(&mut my_vec[..4096]);
 ```
 
-This code is using [`read_exact`] from the standard library to read from
-`socket`. Let's see what the docs say:
+这里的代码使用标准库的[`read_exact`]来从`socket`读取字节流. 让我们看看对应文档: 
 
 [`read_exact`]: https://static.rust-lang.org/doc/master/std/io/trait.Read.html#method.read_exact
 
 > Read the exact number of bytes required to fill the given buffer.
+> "读取恰好数量的字节, 并填充给定的缓存."
 
-So, if this method returns successfully, we're guaranteed that `my_vec` is
-filled, meaning we've read 4k from `socket`. Great!
+所以, 如果这个方法成功地返回, 我们能保证`my_vec`已经被填充, 也就是我们从`socket`
+读取了4k字节. 太棒了! 
 
-But what if the data isn't available yet? What if it hasn't even been sent from
-the other side of the socket?
+但如果数据暂时还没有准备好呢? 如果数据还没从这个套接字(socket)那边传过来呢?
 
-**To fulfill its guarantee, the `read_exact` method must *wait*. That's where the
-term "synchrony" comes from: `read_exact` is *sychronizing* with the
-availability of the needed data.**
+**为了满足填充好缓存的保证,  `read_exact`方法必须*等待*. 这也是术语"同步"的
+来源: `read_exact`是和所需数据的可用性同步的.**
 
-To be more precise, `read_exact` "blocks" the thread that calls it, meaning that
-the thread cannot make further progress until the data has been received.  The
-problem is that a thread, in general, is a weighty thing to waste. And while
-this thread is blocked, it's doing no useful work; all of the action is at the
-OS level, until the data becomes available and the thread is unblocked.
+更准确的说, `read_exact`阻塞了调用它的线程, 意味着该线程不能进一步执行, 直到
+接收到需要的数据. 问题在于, 线程总体来说是一个太重量级的资源而不应该被浪费.
+而且, 当一个线程被阻塞了, 它一直在做无用功; 所有的动作都发生在操作系统层面, 直到
+数据可用, 并疏通了该线程.
 
-More broadly, if we want to handle a number of connections while using methods
-like `read_exact`, we're going to need something like a thread per connection;
-otherwise, the handling of one connection could be blocked waiting for activity
-on another connection. Even with a lot of tuning, the overhead of threads will
-limit scalability.
+放开来讲, 如果我们想要处理一堆连接, 而我们在用类似`read_exact`那样会阻塞线程的
+方法, 那我们就需要给每个连接分配单独一个线程; 否则, 连接的处理会被阻塞以等待
+另外的连接的活动完成. 就算我们能够协调连接的活动时间的分配, 线程的开销仍然会限制
+系统的可伸缩性.
 
-## Asynchrony
+## 异步
 
-To achieve better scalability, we need to avoid tying up an entire thread every
-time we're waiting for some resource to become available. Most operating systems
-provide a "non-blocking", i.e. *asychronous* mode for interacting with objects
-like sockets. In this mode, operations that are not immediately ready return
-with an error, allowing you to continue doing other work on the thread.
+为了达到更好的可伸缩性, 我们需要避免在等待资源释放的时候线程会被阻塞. 绝大部分的
+操作系统提供一个"非阻塞"(或者叫*异步*)模式来和像套接字的对象进行交互. 在这个
+模式里, 不能马上就绪(ready)的操作会返回一个错误, 然后允许你在当前线程继续做其他
+工作.
 
-Working *manually* with resources in this way, though, can be quite painful. You
-have to figure out how to juggle all of the "in flight" operations within a
-single thread, even though most of the time those operations are going to
-arise from completely independent activities (like two separate connections).
+*人工*地通过这种方式和资源打交道是相当痛苦的. 你可以指出如何在单线程中处理这些
+"正在进行中"的操作, 然而大多数情况下, 这些操作来自于完全独立的不同活动(例如两个
+分离的连接).
 
-Fortunately, Rust provides a way of doing async programming that *feels* in many
-respects like using threads, but under the hood accesses resources
-asynchronously, and automatically juggles the in-flight operations for you. The
-core ingredient is *tasks*, which you can think of as "lightweight threads"
-(akin to [goroutines]) that can be automatically juggled onto a smaller number
-of OS-level threads.
+幸运的是, Rust提供了一种实现异步编程的方法, 这种方法*感觉上*像在使用多线程, 但
+底层则是异步访问资源, 并且自动地为你糅合正在进行中的操作. 这方法的核心的概念就是
+*任务*, 你可以把它当做是能够自动映射到更少数量的操作系统线程的"轻量级线程"
+(类似于[goroutines])
 
 [goroutines]: https://tour.golang.org/concurrency/1
 
-So let's take a look at the task model!
+让我们来了解任务模型是怎样工作的吧!
